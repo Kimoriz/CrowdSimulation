@@ -6,19 +6,22 @@ class quadrant
 {
     public:
 
-    quadrant quadrant ( double xOrigin, double yOrigin );
+    quadrant ( double xOrigin, double yOrigin );
 
     void boidPlacer ();
     void wallPlacer ();
+
+    vector <boid> nSubBoid_;
+    vector <obstacle> subWall_;
 
     private:
 
     double xOrigin_, yOrigin_;
     double quadrantWidth_;
     
-    vector <boid> nSubBoid_;
-    vector <obstacle> subWall_;
 };
+
+vector<quadrant> grid_;
 
 int nQuadrant_ = 9;
 

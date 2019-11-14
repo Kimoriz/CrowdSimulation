@@ -25,7 +25,7 @@ void WindowSets ( int argc, char **argv)
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+  BOID CLASS  -+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
 
-double boid::boidRadius_ = 0.07;
+double boid::boidRadius_ = 0.02;
 int boid::nBoidCounter_ = 0;
 
 boid::boid() 
@@ -251,7 +251,7 @@ void goalReacher ( boid Guest )
     
     if ( distance < 0.05 )
     {
-            nBoid_.erase ( It_ );
+            nBoid_.erase ( It_b );
             nBoids_ -= 1;
     }
 }
