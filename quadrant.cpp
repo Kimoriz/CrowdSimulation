@@ -22,6 +22,7 @@ void quadrant::boidPlacer ()
             nSubBoid_.push_back ( nBoid_[i] );
             nBoid_.erase ( It_ );
         }
+        //ciao
     }
 
 }
