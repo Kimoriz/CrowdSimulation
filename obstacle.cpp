@@ -35,30 +35,31 @@ void genWalls ()
     }
 }
 
-void wallCollision ()
+void wallCollision (vector<boid> bd, vector<obstacle> wl)
 {
-    for ( int i=0; i<Walls_.size(); i++ )
+    
+    for ( int i=0; i<wl.size(); i++ )
     {
-        for ( int j=0; j<nBoid_.size(); j++)
+        for ( int j=0; j<bd.size(); j++)
         {
             double distance_ = sqrt (
-            (Walls_[i].getxOrigin ()-nBoid_[j].getx ()) * (Walls_[i].getxOrigin ()-nBoid_[j].getx ()) +
-            (Walls_[i].getyOrigin ()-nBoid_[j].gety ()) * (Walls_[i].getyOrigin ()-nBoid_[j].gety ()) );
+            (wl[i].getxOrigin ()-bd[j].getx ()) * (wl[i].getxOrigin ()-bd[j].getx ()) +
+            (wl[i].getyOrigin ()-bd[j].gety ()) * (wl[i].getyOrigin ()-bd[j].gety ()) );
 
-            double distancex_ = abs( Walls_[i].getxOrigin ()-nBoid_[j].getx () );
-            double distancey_ = abs( Walls_[i].getyOrigin ()-nBoid_[j].gety () ); 
+            double distancex_ = abs( wl[i].getxOrigin ()-bd[j].getx () );
+            double distancey_ = abs( wl[i].getyOrigin ()-bd[j].gety () ); 
             if ( distance_ < wallRadius_ + boid::boidRadius_)
             {
                 Updates_ +=1;
 
-                if ( abs(nBoid_[j].getx ()) > 1-boid::boidRadius_ )
+                if ( abs(bd[j].getx ()) > 1-boid::boidRadius_ )
                 {
-                    nBoid_[j].setxV ( -nBoid_[j].getxV () );
+                    bd[j].setxV ( -bd[j].getxV () );
                 }   
 
-                if ( abs(nBoid_[j].gety ()) > 1-boid::boidRadius_ )
+                if ( abs(bd[j].gety ()) > 1-boid::boidRadius_ )
                 {
-                    nBoid_[j].setyV ( -nBoid_[j].getyV () );
+                    bd[j].setyV ( -bd[j].getyV () );
                 } 
             }
         }

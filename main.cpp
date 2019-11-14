@@ -9,11 +9,11 @@ int main ( int argc, char **argv )
     srand ( time (NULL) );
     WindowSets ( argc, argv );
 
-    int nboids_ = 135;
+    int nboids_ = 100;
     genWalls ();
 
     genBoid ( nboids_ );    //Generate boids
-
+    fillGrid();
     crowding ();
 
     return 0;
