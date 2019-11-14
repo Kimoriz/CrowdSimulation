@@ -81,7 +81,7 @@ class boid
 int nBoids_;
 
 vector<boid> nBoid_;
-vector<boid>::iterator It_;
+vector<boid>::iterator It_b;
 vector <double> boidPositions_;
 
 void boidBody ();
