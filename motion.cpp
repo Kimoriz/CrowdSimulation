@@ -57,17 +57,16 @@ void fillGrid() //filling the grid with people and walls, then deleting the empt
         {
             x=-1+(i*(xRange_/sqrt(nQuadrant_))+((xRange_/sqrt(nQuadrant_))/2));
             y=1-(j*(yRange_/sqrt(nQuadrant_))+((yRange_/sqrt(nQuadrant_))/2));
-            //cout<<"X="<<x<<" Y="<<y<<endl;
             grid_.push_back(quadrant(x,y));
         }
     }
     for(int i=0; i<grid_.size(); i++)
     {
         grid_[i].boidPlacer();
-        grid_[i].wallPlacer();
+        //grid_[i].wallPlacer();
     }
     nBoid_.shrink_to_fit();
-    Walls_.shrink_to_fit();
+    //Walls_.shrink_to_fit();
 }
 
 void genCrowd ()
@@ -110,7 +109,7 @@ void genCrowd ()
                 grid_[i].nSubBoid_[j].setxA ( 0 );
                 grid_[i].nSubBoid_[j].setyA ( 0 );
             }
-            wallCollision(copynBoid_,grid_[i].subWall_);//checking the walls
+            wallCollision ( grid_[i].nSubBoid_ );//checking the walls
         }
         counter_ ++;
     }
@@ -132,14 +131,14 @@ void genCrowd ()
             drawBoid ( grid_[i].nSubBoid_[j] );
         }
     }
-    //cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "<<time_span.count ()<<'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
+    cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "<<time_span.count ()<<'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
     nCollision_ = 0;
     glutSwapBuffers ();
 }
 
 void timeUpdate ( void )
 {
-    dt_ = 0.001;
+    dt_ = 0.0001;
     glutPostRedisplay();
 }
 

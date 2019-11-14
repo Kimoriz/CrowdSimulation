@@ -28,19 +28,19 @@ void quadrant::boidPlacer ()
     }
 }
 
-void quadrant::wallPlacer ()
-{
-    for ( int i=0; i<nBoids_; i++)
-    { 
-        It_w = Walls_.begin ()+i;
-
-        if (xOrigin_-quadrantWidth_ < Walls_[i].getxOrigin () && Walls_[i].getxOrigin () < xOrigin_+quadrantWidth_ 
-        &&  yOrigin_-quadrantWidth_ < Walls_[i].getyOrigin () && Walls_[i].getyOrigin () < yOrigin_+quadrantWidth_)
-        {
-            subWall_.push_back ( Walls_[i] );
-            subWall_.erase ( It_w );
-        }
-    }
-}
+//void quadrant::wallPlacer ()
+//{
+//    for ( int i=0; i<nBoids_; i++)
+//    { 
+//        It_w = Walls_.begin ()+i;
+//
+//        if (xOrigin_-quadrantWidth_ < Walls_[i].getxOrigin () && Walls_[i].getxOrigin () < xOrigin_+quadrantWidth_ 
+//        &&  yOrigin_-quadrantWidth_ < Walls_[i].getyOrigin () && Walls_[i].getyOrigin () < yOrigin_+quadrantWidth_)
+//        {
+//            subWall_.push_back ( Walls_[i] );
+//            subWall_.erase ( It_w );
+//        }
+//    }
+//}
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //

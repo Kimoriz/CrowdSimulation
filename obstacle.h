@@ -18,6 +18,9 @@ class obstacle
     double xOrigin_, yOrigin_, Radius_;
 };
 
+
+void genObstacles ();
+
 void drawObstacles ();
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
@@ -30,8 +33,6 @@ vector <obstacle>::iterator It_w;
 double nWallGen_ = 200;
 double wallRadius_;
 
-void genWalls ();
-
-void wallCollision (vector<boid>, vector<obstacle> );
+void wallCollision ( vector<boid> &boid);
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
