@@ -34,29 +34,3 @@ double obstacle::getRadius  () { return Radius_; }
 //void drawObstacles ();
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
-
-// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-  Walls  -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
-
-void wallCollision ( vector<boid> &boid )
-{
-    for ( int j=0; j<boid.size(); j++)
-    {
-        double distancex_ = xMax_-abs(boid[j].getx ());
-        double distancey_ = yMax_-abs(boid[j].gety ()); 
-
-        if ( distancex_ < boid::boidRadius_ || distancey_ < boid::boidRadius_ )
-        {
-            Updates_ +=1;
-            if ( abs(boid[j].getx ()) > 1-boid::boidRadius_ )
-            {
-                boid[j].setxV ( -boid[j].getxV () );
-            }   
-            if ( abs(boid[j].gety ()) > 1-boid::boidRadius_ )
-            {
-                boid[j].setyV ( -boid[j].getyV () );
-            } 
-        }
-    }
-}
-
-// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //

@@ -5,11 +5,12 @@ int main ( int argc, char **argv )
     srand ( time (NULL) );
     WindowSets ( argc, argv );
 
-    int nboids_ = 100;
-    //genObstacles ();
+    nBoids_ = 2;
 
-    genBoid ( nboids_ );    //Generate boids
-    fillGrid();
+    genBoid ();    //Generate boids
+    //genObstacles ();
+    genGrid();     //Generate the grid and fill the quadrants
+
     crowding ();
 
     return 0;

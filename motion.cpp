@@ -11,9 +11,12 @@ void idle ()
     renderBoid();                                       //Generate boids structure, later should be used also for obstacles ecc...
 
     glClearColor (0.0, 0.2, 0.5, 0.5);
-    for ( int i = 0; i < nBoids_; i++)
-    {   
-        drawBoid ( nBoid_[i] );
+    for ( int i=0; i<grid_.size(); i++ )
+    {
+        for ( int j=0; j<grid_[i].nSubBoid_.size(); j++ )
+        {   
+            drawBoid ( grid_[i].nSubBoid_[j] );
+        }
     }
 }
 
@@ -47,28 +50,6 @@ void axes ()
     glEnd (); 
 }
 
-void fillGrid() //filling the grid with people and walls, then deleting the empty vectors of people and walls
-{
-    double x=0; 
-    double y=0; 
-    for(int i=0; i<sqrt(nQuadrant_); i++)
-    {
-        for(int j=0; j<sqrt(nQuadrant_); j++)
-        {
-            x=-1+(i*(xRange_/sqrt(nQuadrant_))+((xRange_/sqrt(nQuadrant_))/2));
-            y=1-(j*(yRange_/sqrt(nQuadrant_))+((yRange_/sqrt(nQuadrant_))/2));
-            grid_.push_back(quadrant(x,y));
-        }
-    }
-    for(int i=0; i<grid_.size(); i++)
-    {
-        grid_[i].boidPlacer();
-        //grid_[i].wallPlacer();
-    }
-    nBoid_.shrink_to_fit();
-    //Walls_.shrink_to_fit();
-}
-
 void genCrowd ()
 {   
     glClearColor ( 0.0, 0.4, 0.4, 0. );
@@ -77,29 +58,14 @@ void genCrowd ()
     int counter_ = 0;
 
     chrono::high_resolution_clock::time_point ti = chrono::high_resolution_clock::now ();
-    /*while ( counter_<100 )
-    {
-        vector <boid> copynBoid_ = nBoid_;
-        for ( int i=0; i<nBoids_; i++ )
-        {
-            nBoid_[i].collision ( copynBoid_ );
-            nBoid_[i].updatex ( dt_ );
-            nBoid_[i].updatey ( dt_ );
-            nBoid_[i].updatexV ( dt_ );
-            nBoid_[i].updateyV ( dt_ );
-            nBoid_[i].setxA ( 0 );
-            nBoid_[i].setyA ( 0 );
-        }
-        wallCollision();
-        counter_ ++;
-    }*/
+    
     while(counter_<100)
     {
         vector <boid> copynBoid_;
-        for(int i=0; i<grid_.size(); i++)          //looping the grid
+        for(int i=0; i<grid_.size(); i++)               //looping the grid
         {
             copynBoid_=grid_[i].nSubBoid_;
-            for(int j=0; j<copynBoid_.size(); j++) //looping the boid 
+            for(int j=0; j<copynBoid_.size(); j++)      //looping the boid 
             {
                 grid_[i].nSubBoid_[j].collision ( copynBoid_ );
                 grid_[i].nSubBoid_[j].updatex ( dt_ );
@@ -109,12 +75,14 @@ void genCrowd ()
                 grid_[i].nSubBoid_[j].setxA ( 0 );
                 grid_[i].nSubBoid_[j].setyA ( 0 );
             }
-            wallCollision ( grid_[i].nSubBoid_ );//checking the walls
+            wallCollision ( grid_[i].nSubBoid_ );       //checking the walls
+            grid_[i].tresPass ();
         }
         counter_ ++;
     }
     chrono::high_resolution_clock::time_point tf = chrono::high_resolution_clock::now ();
     chrono::duration<double> time_span = chrono::duration_cast<chrono::duration<double>> ( tf - ti );
+    
     for(int i=0; i<grid_.size(); i++)
     {
         for(int j=0; j<grid_[i].nSubBoid_.size(); j++)
@@ -128,17 +96,19 @@ void genCrowd ()
             //    mindRefresher (nBoid_[j]); 
             //}
             //goalReacher ( nBoid_[j]);
+            
             drawBoid ( grid_[i].nSubBoid_[j] );
         }
     }
-    cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "<<time_span.count ()<<'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
+    cout<<boidDrawn_<<endl;
+    //cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "<<time_span.count ()<<'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
     nCollision_ = 0;
     glutSwapBuffers ();
 }
 
 void timeUpdate ( void )
 {
-    dt_ = 0.0001;
+    dt_ = 0.00001;
     glutPostRedisplay();
 }
 

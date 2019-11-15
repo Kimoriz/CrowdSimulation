@@ -1,5 +1,12 @@
 #include "boid.h"
 
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-  To-be-analysed params -+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
+
+int Updates_ = 0;
+int nCollision_ = 0;
+
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
+
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+  Pre-existing Variables  -+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
 //                                  Necessary for Opengl function that do not have arguments
 
@@ -25,38 +32,38 @@ void WindowSets ( int argc, char **argv)
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+  BOID CLASS  -+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
 
-double boid::boidRadius_ = 0.02;
+double boid::boidRadius_ = 0.2;
 int boid::nBoidCounter_ = 0;
 
 boid::boid() 
-{   
+{      
     if ( nBoidCounter_ == 0 )
     {
         if((rand()%2)==1)                            //Randomizer x's and y's
-            { x_  =  ( 1-((float)(rand()%100))/500.); }
+            { x_  = ( (xMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
         else  
-            { x_  = -( 1-((float)(rand()%100))/500.); }
+            { x_  = ( (xMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
         if((rand()%2)==1)
-            { y_  =  ( 1-((float)(rand()%100))/500.); }
+            { y_  = ( (yMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
         else  
-            { y_  = -( 1-((float)(rand()%100))/500.); }
+            { y_  = ( (yMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
         //y_  =  ( -0.5-((float)(rand()%100))/200.);
     }
-
+    
     for ( int i =0; i<(nBoidCounter_*2); i+=2)
     {
         if (i==0)
         {
             if((rand()%2)==1)                               //Randomizer x's and y's
-                { x_  =  ( 1-((float)(rand()%100))/100.); }
+                { x_  = ( (xMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
             else  
-                { x_  = -( 1-((float)(rand()%100))/100.); }
+                { x_  = ( (xMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
             if((rand()%2)==1)
-                { y_  =  ( 1-((float)(rand()%100))/100.); }
+                { y_  = ( (yMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
             else  
-                { y_  = -( 1-((float)(rand()%100))/100.); }
+                { y_  = ( (yMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
             //y_  = ( -0.5-((float)(rand()%100))/200.);
-
+    
         }
         if ( sqrt( (x_-boidPositions_[i])  *(x_-boidPositions_[i]) + 
                    (y_-boidPositions_[i+1])*(y_-boidPositions_[i+1]))  < (2*boidRadius_) )
@@ -65,6 +72,8 @@ boid::boid()
                    }  
         if (  abs(x_) > (1-boidRadius_) || abs(y_) > (1-boidRadius_) ) {i = -2;}  
     }
+    //x_ = 0;
+    //y_ = 0;
 
     if((rand()%2)==1)                                       //Randomizer Vx's & Vy's
         { xV_  =  ( (float)(rand()%100))/100.; }  
@@ -91,7 +100,7 @@ boid::boid()
     boidPositions_.push_back(y_);
     nBoidCounter_ += 1;
 }
-    
+
 double boid::getx () { return x_; }
 double boid::gety () { return y_; }
 
@@ -104,6 +113,9 @@ double boid::getyA () { return yA_; }
 
 double boid::getxGoal () { return xGoal_; }
 double boid::getyGoal () { return yGoal_; }
+
+double boid::getinfluencexIndex () { return influencexIndex_; }
+double boid::getinfluenceyIndex () { return influenceyIndex_; }
 
 void boid::setx ( double x ) { x_ =  x; }
 void boid::sety ( double y ) { y_ =  y; }
@@ -118,6 +130,8 @@ void boid::setyA ( double yA ) { yA_ = yA; }
 void boid::setxGoal ( double xGoal ) { xGoal_ = xGoal; } 
 void boid::setyGoal ( double yGoal ) { yGoal_ = yGoal; }
 
+void boid::setinfluencexIndex ( double influencexIndex ) { influencexIndex_ = influencexIndex; }
+void boid::setinfluenceyIndex ( double influenceyIndex ) { influenceyIndex_ = influenceyIndex; }
 
 void boid::updatex ( double dt )
 {   
@@ -149,6 +163,16 @@ void boid::updateyV ( double dt)
     else xV_ = xV_ + dt*xA_;;
 }
 
+void genBoid ()
+{   
+    for ( int i=0; i<nBoids_; i++)
+    {
+        nBoid_.push_back ( boid() );
+        //if ( (rand()%2) == 1 ) { goalGiver ( nBoid_[i], 0.8, 0.8); }
+        //else { goalGiver ( nBoid_[i], -0.8, 0.8); }
+    }
+}
+
 void boidBody()
 {
     glBegin ( GL_POLYGON );
@@ -168,17 +192,6 @@ void renderBoid ()
     glEndList ();
 }
 
-void genBoid ( int nBoids )
-{   
-    nBoids_ = nBoids;
-    nBoid_.resize ( nBoids_ );
-    //for ( int i=0; i<nBoids_; i++)
-    //{
-    //    if ( (rand()%2) == 1 ) { goalGiver ( nBoid_[i], 0.8, 0.8); }
-    //    else { goalGiver ( nBoid_[i], -0.8, 0.8); }
-    //}
-}
-
 void drawBoid ( boid nBoid )
 {
     double colorinoB = ( sqrt (nBoid.getxV () * nBoid.getyV () + nBoid.getyV () * nBoid.getyV () ) / sqrt(2) );
@@ -187,28 +200,30 @@ void drawBoid ( boid nBoid )
     glTranslatef ( nBoid.getx(), nBoid.gety(), 0 );
     glCallList ( boidList_ );
     glPopMatrix ();
+    boidDrawn_ += 1;
 }
-
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
 
-void boid::collision ( vector<boid> copynBoid_ )
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+  BOID FUNCTION  +-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
+
+void boid::collision ( vector<boid> copynBoid )
 {
     double d;
     vettore cong;
-    for(int i=0; i<copynBoid_.size (); i++)
+    for(int i=0; i<copynBoid.size (); i++)
     {
-        d=sqrt( (this->getx ()-copynBoid_[i].getx ())*(this->getx () -copynBoid_[i].getx ()) 
-               +(this->gety ()-copynBoid_[i].gety ())*(this->gety () -copynBoid_[i].gety ()) );
+        d=sqrt( (this->getx ()-copynBoid[i].getx ())*(this->getx () -copynBoid[i].getx ()) 
+               +(this->gety ()-copynBoid[i].gety ())*(this->gety () -copynBoid[i].gety ()) );
         if(d<=(2*boid::boidRadius_) && d!=0)
         {    
             Updates_ +=1; 
             nCollision_ += 1;      
             
             vettore r_1 ( this->getx (), this->gety ());
-            vettore r_2 ( copynBoid_[i].getx (), copynBoid_[i].gety ());
+            vettore r_2 ( copynBoid[i].getx (), copynBoid[i].gety ());
             vettore v_1 ( this->getxV (), this->getyV ());
-            vettore v_2 ( copynBoid_[i].getxV (), copynBoid_[i].getyV ());
+            vettore v_2 ( copynBoid[i].getxV (), copynBoid[i].getyV ());
             cong=r_2-r_1;
             cong=cong.get_versor ();
             vettore norm=cong.get_normal ();
@@ -234,7 +249,6 @@ void boid::collision ( vector<boid> copynBoid_ )
         }
     }
 }
-
 
 void goalGiver ( boid &Guest, double xGoal, double yGoal )
 {
@@ -265,3 +279,5 @@ void mindRefresher ( boid &Guest )
     Guest.setxV ( normal_.componenti[0] );
     Guest.setyV ( normal_.componenti[1] );
 }
+
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
