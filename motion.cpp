@@ -89,19 +89,20 @@ void genCrowd ()
         {
            // It_ = nBoid_.begin() + j;
 
-            //if((rand()%2)==1)                            //Randomizer x's and y's
-            //    { mindRefresher (nBoid_[j]); }
-            //else  
-            //{ 
-            //    mindRefresher (nBoid_[j]); 
-            //}
-            //goalReacher ( nBoid_[j]);
-            
+            if((rand()%2)==1)                            //Randomizer x's and y's
+            {
+                mindRefresher ( grid_[i].nSubBoid_[j] ); 
+            }
+            else  
+            { 
+                mindRefresher ( grid_[i].nSubBoid_[j] ); 
+            }            
             drawBoid ( grid_[i].nSubBoid_[j] );
         }
+        goalReacher ( grid_[i].nSubBoid_ );
     }
-    cout<<boidDrawn_<<endl;
-    //cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "<<time_span.count ()<<'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
+    //cout<<boidDrawn_<<endl;
+    cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "<<time_span.count ()<<'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
     nCollision_ = 0;
     glutSwapBuffers ();
 }

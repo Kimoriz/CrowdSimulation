@@ -13,8 +13,6 @@ class obstacle
     double getyOrigin ();
     double getRadius ();
 
-    void obstaclePlacer ();
-
     private:
 
     double xOrigin_, yOrigin_, Radius_;

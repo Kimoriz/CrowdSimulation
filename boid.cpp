@@ -32,7 +32,7 @@ void WindowSets ( int argc, char **argv)
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+  BOID CLASS  -+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
 
-double boid::boidRadius_ = 0.2;
+double boid::boidRadius_ = 0.01;
 int boid::nBoidCounter_ = 0;
 
 boid::boid() 
@@ -43,11 +43,11 @@ boid::boid()
             { x_  = ( (xMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
         else  
             { x_  = ( (xMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
-        if((rand()%2)==1)
-            { y_  = ( (yMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
-        else  
-            { y_  = ( (yMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
-        //y_  =  ( -0.5-((float)(rand()%100))/200.);
+        //if((rand()%2)==1)
+        //    { y_  = ( (yMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
+        //else  
+        //    { y_  = ( (yMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
+        y_  =  ( -0.5-((float)(rand()%100))/200.);
     }
     
     for ( int i =0; i<(nBoidCounter_*2); i+=2)
@@ -58,11 +58,11 @@ boid::boid()
                 { x_  = ( (xMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
             else  
                 { x_  = ( (xMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
-            if((rand()%2)==1)
-                { y_  = ( (yMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
-            else  
-                { y_  = ( (yMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
-            //y_  = ( -0.5-((float)(rand()%100))/200.);
+            //if((rand()%2)==1)
+            //    { y_  = ( (yMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
+            //else  
+            //    { y_  = ( (yMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
+            y_  = ( -0.5-((float)(rand()%100))/200.);
     
         }
         if ( sqrt( (x_-boidPositions_[i])  *(x_-boidPositions_[i]) + 
@@ -75,26 +75,30 @@ boid::boid()
     //x_ = 0;
     //y_ = 0;
 
-    if((rand()%2)==1)                                       //Randomizer Vx's & Vy's
-        { xV_  =  ( (float)(rand()%100))/100.; }  
-    else  
-        { xV_  = -( (float)(rand()%100))/100.; }
-    
-    if((rand()%2)==1)
-        { yV_  =  ( (float)(rand()%100))/100.; }
-    else  
-        { yV_  = -( (float)(rand()%100))/100.; }
+    //if((rand()%2)==1)                                       //Randomizer Vx's & Vy's
+    //    { xV_  =  ( (float)(rand()%100))/100.; }  
+    //else  
+    //    { xV_  = -( (float)(rand()%100))/100.; }
+    //
+    //if((rand()%2)==1)
+    //    { yV_  =  ( (float)(rand()%100))/100.; }
+    //else  
+    //    { yV_  = -( (float)(rand()%100))/100.; }
 
-    //xV_ = 0.;
-    //yV_ = 0.;
-
-    xGoal_ = xV_;
-    yGoal_ = yV_;
-
-    modV_  = sqrt ( (pow (xV_, 2 ) + pow ( yV_, 2 )) ); 
+    xV_ = 0.;
+    yV_ = 0.;
 
     xA_ = 0;
     yA_ = 0;
+
+    modV_  = sqrt ( (pow (xV_, 2 ) + pow ( yV_, 2 )) );
+
+    xGoal_ = xV_;
+    yGoal_ = yV_; 
+
+    //belongIndex_= 0;
+    //influencexIndex_ = 0;
+    //influenceyIndex_ = 0;
 
     boidPositions_.push_back(x_);
     boidPositions_.push_back(y_);
@@ -114,8 +118,9 @@ double boid::getyA () { return yA_; }
 double boid::getxGoal () { return xGoal_; }
 double boid::getyGoal () { return yGoal_; }
 
-double boid::getinfluencexIndex () { return influencexIndex_; }
-double boid::getinfluenceyIndex () { return influenceyIndex_; }
+//double boid::getbelongIndex () { return belongIndex_; }
+//double boid::getinfluencexIndex () { return influencexIndex_; }
+//double boid::getinfluenceyIndex () { return influenceyIndex_; }
 
 void boid::setx ( double x ) { x_ =  x; }
 void boid::sety ( double y ) { y_ =  y; }
@@ -130,8 +135,9 @@ void boid::setyA ( double yA ) { yA_ = yA; }
 void boid::setxGoal ( double xGoal ) { xGoal_ = xGoal; } 
 void boid::setyGoal ( double yGoal ) { yGoal_ = yGoal; }
 
-void boid::setinfluencexIndex ( double influencexIndex ) { influencexIndex_ = influencexIndex; }
-void boid::setinfluenceyIndex ( double influenceyIndex ) { influenceyIndex_ = influenceyIndex; }
+//void boid::setbelongIndex ( int belongIndex ) { belongIndex_ = belongIndex; }
+//void boid::setinfluencexIndex ( int influencexIndex ) { influencexIndex_ = influencexIndex; }
+//void boid::setinfluenceyIndex ( int influenceyIndex ) { influenceyIndex_ = influenceyIndex; }
 
 void boid::updatex ( double dt )
 {   
@@ -168,8 +174,8 @@ void genBoid ()
     for ( int i=0; i<nBoids_; i++)
     {
         nBoid_.push_back ( boid() );
-        //if ( (rand()%2) == 1 ) { goalGiver ( nBoid_[i], 0.8, 0.8); }
-        //else { goalGiver ( nBoid_[i], -0.8, 0.8); }
+        if ( (rand()%2) == 1 ) { goalGiver ( nBoid_[i], 0.8, 0.8); }
+        else { goalGiver ( nBoid_[i], -0.8, 0.8); }
     }
 }
 
@@ -257,19 +263,6 @@ void goalGiver ( boid &Guest, double xGoal, double yGoal )
     Guest.setyGoal ( yGoal );
 }
 
-void goalReacher ( boid Guest )
-{
-    Updates_ +=1;
-    double distance = sqrt( ( Guest.getx () -Guest.getxGoal ())*(Guest.getx () -Guest.getxGoal()) +
-                            ( Guest.gety () -Guest.getyGoal ())*(Guest.gety () -Guest.getyGoal()) ); 
-    
-    if ( distance < 0.05 )
-    {
-            nBoid_.erase ( It_b );
-            nBoids_ -= 1;
-    }
-}
-
 void mindRefresher ( boid &Guest )
 {
     Updates_ +=1;
@@ -278,6 +271,22 @@ void mindRefresher ( boid &Guest )
 
     Guest.setxV ( normal_.componenti[0] );
     Guest.setyV ( normal_.componenti[1] );
+}
+
+void goalReacher ( vector<boid> &nSubBoid )
+{
+    Updates_ +=1;
+    int IndexMax = nSubBoid.size ();
+    for ( int Index=0; Index<IndexMax; Index++ )
+    {
+        double distance = sqrt( ( nSubBoid[Index].getx ()-nSubBoid[Index].getxGoal ())*(nSubBoid[Index].getx ()-nSubBoid[Index].getxGoal()) +
+                                ( nSubBoid[Index].gety ()-nSubBoid[Index].getyGoal ())*(nSubBoid[Index].gety ()-nSubBoid[Index].getyGoal()) ); 
+    
+        if ( distance < 0.05 )
+        {
+            nSubBoid.erase ( nSubBoid.begin ()+Index );
+        }
+    }
 }
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //

@@ -44,8 +44,9 @@ class boid
     double getxGoal ();
     double getyGoal ();
 
-    double getinfluencexIndex ();
-    double getinfluenceyIndex ();
+    //double getbelongIndex ();
+    //double getinfluencexIndex ();
+    //double getinfluenceyIndex ();
 
     void setx ( double x );
     void sety ( double y );
@@ -60,8 +61,9 @@ class boid
     void setxGoal ( double xGoal );
     void setyGoal ( double yGoal );
 
-    void setinfluencexIndex ( double influencexIndex );
-    void setinfluenceyIndex ( double influenceyIndex );
+    //void setbelongIndex ( int belongIndex );
+    //void setinfluencexIndex ( int influencexIndex );
+    //void setinfluenceyIndex ( int influenceyIndex );
 
     void updatex ( double dt );
     void updatey ( double dt );
@@ -81,7 +83,8 @@ class boid
     double  xA_, yA_;
     double  xGoal_, yGoal_;
 
-    double influencexIndex_, influenceyIndex_;
+
+    int belongIndex_, influencexIndex_, influenceyIndex_;
 };
 
 int nBoids_;
@@ -104,10 +107,10 @@ void drawBoid ( boid nBoid );
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+  BOID FUNCTION  +-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
 
-void goalGiver ( boid &Guest, double xGoal, double yGoal );
-
-void goalReacher ( boid Guest );  
+void goalGiver ( boid &Guest, double xGoal, double yGoal ); 
 
 void mindRefresher ( boid &Guest );
+
+void goalReacher ( vector<boid> &nSubBoid ); 
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //

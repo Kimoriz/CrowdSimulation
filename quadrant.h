@@ -2,18 +2,16 @@
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-  GRID -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
 
-class boid;
-
 class quadrant 
 {
 
     public:
 
     static int quadCounter_;
+
     quadrant ( double xOrigin, double yOrigin );
 
     void boidPlacer ();
-    void boidReplacer ( int boidIndex, int quadIndex );
 
     void obstaclePlacer ();
 
@@ -25,15 +23,21 @@ class quadrant
     void tresPass ();
     void boidMover ( int boidIndex, int quadIndex, int newQuadIndex );
 
+    void boidxMover ( int boidIndex, int quadIndex, int newQuadIndex );
+    void boidyMover ( int boidIndex, int quadIndex, int newQuadIndex );
+    void boidDeleter ( int boidIndex, int quadIndex, int newQuadIndex );
+    int nSubBoidSize_;
+
     private:
 
     double xOrigin_, yOrigin_;
     double xQuadMin_, xQuadMax_;
     double yQuadMin_, yQuadMax_;
     int quadIndex_;
+
 };
 
-int nQuadrant_ = 16;
+int nQuadrant_ = 9;
 double quadrantWidth_;
 
 vector<quadrant> grid_;
