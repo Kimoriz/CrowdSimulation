@@ -12,10 +12,12 @@ class obstacle
     double getxOrigin ();
     double getyOrigin ();
     double getRadius ();
+    double getWidth ();
     
     private:
 
     double xOrigin_, yOrigin_, Radius_;
+    double width_;
 };
 
 vector <obstacle> Walls_;

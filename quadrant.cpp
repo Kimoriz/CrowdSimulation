@@ -114,10 +114,9 @@ void quadrant::ObstaclePlacer ()
             subObstacles_.reserve (1);
             subObstacles_.push_back ( Walls_[i] );
             //Walls_.erase ( Walls_.begin ()+i );
-           // i-=1;
+            // i-=1;
         }
     }
-    cout<<subObstacles_.size()<<endl;
 }
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
 
@@ -147,24 +146,36 @@ void wallCollision ( vector<boid> &nBoid )
 
 int obstacleCollision(vector<boid> &boid, vector<obstacle> w)
 {
-    cout<<"mammt1"<<endl;
-    cout<<w.size()<<endl;
-    if(w.size() != 0)
+    if(w.size() == 0)
     {  
         return -1;
     }
-    double wradius = w[0].getRadius();
+    double wradius = w[0].getRadius ();
+    double wWidth_ = w[0].getWidth ();
+    double distancex_, distancey_;
+    double xClamp_, yClamp_;
+    double xP_, yP_;
+
     for(int i = 0; i<boid.size(); i++)
     {
-    cout<<"mammt2"<<endl;
         for (int j = 0; j<w.size(); j++)
         {
-    cout<<"mammt3"<<endl;
-            double distancex_ = w[j].getxOrigin()-abs(boid[i].getx ());
-            double distancey_ = w[j].getyOrigin()-abs(boid[i].gety ()); 
-            if ( distancex_ < (boid::boidRadius_ + wradius)  || distancey_ < (boid::boidRadius_ + wradius) )
+            distancex_ = w[j].getxOrigin()-(boid[i].getx ());
+            distancey_ = w[j].getyOrigin()-(boid[i].gety ()); 
+            //cout <<wradius<<endl;
+            if ( abs(distancex_) < (boid::boidRadius_ + wradius)  && abs(distancey_) < (boid::boidRadius_ + wradius) )
             {
-               boid[i].setyV(-boid[i].getyV());
+                xClamp_ = clamp ( distancex_, -wWidth_ , wWidth_ ); 
+                yClamp_ = clamp ( distancey_, -wWidth_ , wWidth_ ); 
+                //cout<<"entrato"<<i<<endl;
+                xP_ = w[j].getxOrigin() + xClamp_; 
+                yP_ = w[j].getyOrigin() + yClamp_;
+                
+                if ( abs(boid[i].getx()-(xP_))<abs(boid[i].gety()-(yP_)) )
+                {
+                    boid[i].setyV(-boid[i].getyV());
+                }
+                else boid[i].setxV(-boid[i].getxV());
             }
         }
     }

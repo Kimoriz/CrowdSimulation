@@ -86,10 +86,14 @@ void genCrowd ()
     
     for(int i=0; i<grid_.size(); i++)
     {
-        for(int j=0; j<grid_[i].nSubBoid_.size(); j++)
+        for ( int j=0; j<grid_[i].subObstacles_.size(); j++ )
+        {   
+            drawObstacles ( grid_[i].subObstacles_[j] );
+        }
+    
+        for(int j=0; j<grid_[i].nSubBoid_.size(); j++)   //grid_[i].nSubBoid_[j]
         {
-           // It_ = nBoid_.begin() + j;
-
+            //It_ = nBoid_.begin() + j;
             if((rand()%2)==1)                            //Randomizer x's and y's
             {
                 mindRefresher ( grid_[i].nSubBoid_[j] ); 
@@ -97,13 +101,13 @@ void genCrowd ()
             else  
             { 
                 mindRefresher ( grid_[i].nSubBoid_[j] ); 
-            }            
+            }           
             drawBoid ( grid_[i].nSubBoid_[j] );
         }
         goalReacher ( grid_[i].nSubBoid_ );
     }
     //cout<<boidDrawn_<<endl;
-    cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "<<time_span.count ()<<'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
+    //cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "<<time_span.count ()<<'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
     nCollision_ = 0;
     glutSwapBuffers ();
 }

@@ -9,6 +9,7 @@
 #include <math.h>
 #include <time.h>
 #include <cmath>
+#include <algorithm>
 //Time inclusion to evaluate efficiency of the programme
 #include <chrono>
 #include <ctime>
