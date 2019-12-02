@@ -4,6 +4,11 @@
 
 int quadrant::quadCounter_ = 0;
 
+double clamp(double x, double upper, double lower)
+{
+    return min(upper, max(x, lower));
+}
+
 quadrant::quadrant ( double xOrigin, double yOrigin )
 {
     xOrigin_ = xOrigin;
@@ -28,7 +33,7 @@ void genGrid()                      //generates the grid and fill the subVector 
         {
             double xOrigin = xMin_+((1+(2*xIndex))*quadrantWidth_);
             double yOrigin = yMin_+((1+(2*yIndex))*quadrantWidth_);
-            //cout<<xIndex<<"\t"<<yIndex<<"\t"<<xOrigin<<"\t"<<yOrigin<<endl;
+
             grid_.push_back( quadrant (xOrigin, yOrigin) );
         }
     }
@@ -163,10 +168,49 @@ void wallCollision ( vector<int> &nBoid )
             {
                 nBoid_[nBoid[boidIndex]].setyV ( -nBoid_[nBoid[boidIndex]].getyV () );
             } 
+
         }
     }
-}
+    return 0;
+}*/
 
+int obstacleCollision ( vector<int> &nBoid, vector<obstacle> &wall)
+{
+    if(wall.size() == 0)
+    {  
+        return -1;
+    }
+    double wallRadius = wall[0].getRadius ();
+    double wWidth_ = wall[0].getWidth ();
+    double distancex_, distancey_;
+    double xClamp_, yClamp_;
+    double xP_, yP_;
+
+    for(int i = 0; i<nBoid.size(); i++)
+    {
+        for (int j = 0; j<wall.size(); j++)
+        {
+            distancex_ = wall[j].getxOrigin()-(nBoid_[nBoid[i]].getx ());
+            distancey_ = wall[j].getyOrigin()-(nBoid_[nBoid[i]].gety ()); 
+            //cout <<wradius<<endl;
+            if ( abs(distancex_) < (boid::boidRadius_ + wallRadius)  && abs(distancey_) < (boid::boidRadius_ + wallRadius) )
+            {
+                xClamp_ = clamp ( distancex_, -wWidth_ , wWidth_ ); 
+                yClamp_ = clamp ( distancey_, -wWidth_ , wWidth_ ); 
+                //cout<<"entrato"<<i<<endl;
+                xP_ = wall[j].getxOrigin() + xClamp_; 
+                yP_ = wall[j].getyOrigin() + yClamp_;
+                
+                if ( abs(nBoid_[nBoid[i]].getx()-(xP_))<abs(nBoid_[nBoid[i]].gety()-(yP_)) )
+                {
+                    nBoid_[nBoid[i]].setyV(-nBoid_[nBoid[i]].getyV());
+                }
+                else nBoid_[nBoid[i]].setxV(-nBoid_[nBoid[i]].getxV());
+            }
+        }
+    }
+    return 0;
+}
 /*int obstacleCollision(vector<boid> &boid, vector<obstacle> w)
 {
     if(w.size() == 0)
@@ -242,6 +286,7 @@ int obstacleCollision ( vector<int> &nBoid, vector<obstacle> &wall)
     }
     return 0;
 }
+
 
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //

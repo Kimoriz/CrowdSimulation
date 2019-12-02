@@ -5,7 +5,9 @@ int main ( int argc, char **argv )
     srand ( time (NULL) );
     WindowSets ( argc, argv );
 
-    nBoids_ = 50;
+
+    nBoids_ = 20;
+
 
     genBoid ();    //Generate boids
     genObstacles ();

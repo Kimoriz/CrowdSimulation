@@ -61,12 +61,14 @@ void genCrowd ()
     
     while(counter_<100)
     {
+
         for(int i=0; i<grid_.size(); i++)               //looping the grid
         {
             vector <int> copynBoid_;
             int N=sqrt(nQuadrant_);
             //cout<<N<<"\t"<<i<<"\n";
             copynBoid_=grid_[i].nSubBoid_;
+
             //cout<<copynBoid_.size()<<endl;
             if(i==0)//bot left corner
             {
@@ -170,6 +172,7 @@ void genCrowd ()
             obstacleCollision(grid_[i].nSubBoid_, grid_[i].subObstacles_);
             grid_[i].tresPass ();
             //cout<<"Out collision\n";
+
         }
         
         counter_ ++;

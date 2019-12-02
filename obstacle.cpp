@@ -22,6 +22,7 @@ double obstacle::getHeight  () { return height_; }
 
 void genObstacles ()
 { 
+
     int nWallGen_ = 150;
     double wallRadius_ = (0.8)/(nWallGen_);
     //double yWallRadius_ = yRange_/nWallGen_;
@@ -32,6 +33,10 @@ void genObstacles ()
         //Walls_[i] = obstacle(  xMin_+i*wallRadius_, 0.4, wallRadius_);
         //Walls_.push_back( obstacle(  xMin_+i*wallRadius_, 0.4, wallRadius_) );
         Walls_.push_back( obstacle(  -0.1, yMin_+i*wallRadius_, wallRadius_, 0.008) );
+
+        
+    }
+
     }
     wallRadius_=1./nWallGen_;
     for(int i = 0; i<nWallGen_; i++)
@@ -41,31 +46,7 @@ void genObstacles ()
         Walls_.push_back( obstacle(  -0.1, i*wallRadius_, wallRadius_, 0.008) );
     }
 
-    //for(int i = nWallGen_/2; i<nWallGen_; i++)
-    //{
-    //    //Walls_[i] = obstacle(  xMin_+i*wallRadius_, 0.4, wallRadius_);
-    //    //Walls_.push_back( obstacle(  xMin_+i*wallRadius_, 0.4, wallRadius_) );
-    //    Walls_.push_back( obstacle(  -0.2, 0.2+i*wallRadius_, wallRadius_) );
-    //}
-/*    
-    for(int i = 11; i<90; i++)
-    {
-        Walls_[i] = obstacle(  -0.8 + (2+i)*wallRadius_, 0.7, wallRadius_);
-    }
-     
-    for(int i = 92; i<100; i++)
-    {
-        Walls_[i] = obstacle( 0.8+(2+i)*wallRadius_, 0.7, wallRadius_);
-    }
-/*
-    for ( int i = 0; i<nWallGen_; i++)
-    { 
-        Walls_[i]               = obstacle(  xMin_-wallRadius_,     yMin_+(i*wallRadius_), wallRadius_ );
-        Walls_[i+(  nWallGen_)] = obstacle(  xMin_+(i*wallRadius_), yMax_+wallRadius_,     wallRadius_ );
-        Walls_[i+(2*nWallGen_)] = obstacle(  xMax_+wallRadius_,     yMax_-(i*wallRadius_), wallRadius_ );
-        Walls_[i+(3*nWallGen_)] = obstacle(  xMax_-(i*wallRadius_), yMin_-wallRadius_,     wallRadius_ );
-    }
-*/
+
 }
 
 void drawObstacles ( obstacle Obs )

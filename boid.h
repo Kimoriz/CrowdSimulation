@@ -47,9 +47,13 @@ class boid
     int getIdentity ();
     bool getExistance ();
 
+
+    int getnGoalsR();
+
     //double getbelongIndex ();
     //double getinfluencexIndex ();
     //double getinfluenceyIndex ();
+
 
     void setx ( double x );
     void sety ( double y );
@@ -75,10 +79,13 @@ class boid
     void updateyV ( double dt );
 
     void setExistance ( bool state );
-
     void collision ( vector <int> copynBoid );
     
+    void updatenGoalsR();
+
     static double boidRadius_;
+
+    static int nGoals_;
 
     private:   
 
@@ -87,6 +94,8 @@ class boid
     double  modV_;
     double  xA_, yA_;
     double  xGoal_, yGoal_;
+
+    int nGoalsReached_;
 
     int identity_;
     bool existance_;
