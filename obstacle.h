@@ -25,7 +25,9 @@ class obstacle
 vector <obstacle> Walls_;
 vector <obstacle>::iterator It_Obs;
 
+
 double clamp(double, double, double);
+
 
 void genObstacles ();
 

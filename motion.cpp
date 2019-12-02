@@ -61,12 +61,105 @@ void genCrowd ()
     
     while(counter_<100)
     {
-        vector <int> copynBoid_;
+
         for(int i=0; i<grid_.size(); i++)               //looping the grid
         {
+            vector <int> copynBoid_;
+            int N=sqrt(nQuadrant_);
+            //cout<<N<<"\t"<<i<<"\n";
             copynBoid_=grid_[i].nSubBoid_;
-            for(int j=0; j<copynBoid_.size(); j++)      //looping the boid 
+
+            //cout<<copynBoid_.size()<<endl;
+            if(i==0)//bot left corner
             {
+                //cout<<"Bot Left\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N+1].nSubBoid_.begin(),grid_[i+N+1].nSubBoid_.end());
+            }
+            else if(i==((N*N)-1))//top right corner
+            {
+                //cout<<"Top Right\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N-1].nSubBoid_.begin(),grid_[i-N-1].nSubBoid_.end());
+            }
+            else if(i==(N-1))//bottom right corner
+            {
+                //cout<<"Bot Right\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N-1].nSubBoid_.begin(),grid_[i+N-1].nSubBoid_.end());   
+            }
+            else if(i==((N*N)-1-N))//top left corner
+            {
+                //cout<<"Top Left\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N+1].nSubBoid_.begin(),grid_[i-N+1].nSubBoid_.end()); 
+            }
+            else if(i>((N*N)-N))//first row
+            {
+                //cout<<"First Row\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N-1].nSubBoid_.begin(),grid_[i-N-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N+1].nSubBoid_.begin(),grid_[i-N+1].nSubBoid_.end());
+            }
+            else if(i<N)//last row
+            {
+                //cout<<"Last Row\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N-1].nSubBoid_.begin(),grid_[i+N-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N+1].nSubBoid_.begin(),grid_[i+N+1].nSubBoid_.end());
+            }
+            else if(i%N==0)//first column
+            {
+                //cout<<"First Col\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1+N].nSubBoid_.begin(),grid_[i+1+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1-N].nSubBoid_.begin(),grid_[i+1-N].nSubBoid_.end());
+            }
+            else if(i%N==1)//last column
+            {
+                //cout<<"Last Col\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1+N].nSubBoid_.begin(),grid_[i-1+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1-N].nSubBoid_.begin(),grid_[i-1-N].nSubBoid_.end());
+            }
+            else
+            {
+                //cout<<"Else\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N-1].nSubBoid_.begin(),grid_[i-N-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N+1].nSubBoid_.begin(),grid_[i-N+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N-1].nSubBoid_.begin(),grid_[i+N-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N+1].nSubBoid_.begin(),grid_[i+N+1].nSubBoid_.end());
+            }
+            //cout<<"After copynBoid\n";
+            //cout<<copynBoid_.size()<<endl;
+            for(int j=0; j<grid_[i].nSubBoid_.size(); j++)      //looping the boid 
+            {
+                //cout<<j<<" Before collision\n";
                 nBoid_[grid_[i].nSubBoid_[j]].collision ( copynBoid_ );
                 nBoid_[grid_[i].nSubBoid_[j]].updatex ( dt_ );
                 nBoid_[grid_[i].nSubBoid_[j]].updatey ( dt_ );
@@ -78,7 +171,10 @@ void genCrowd ()
             wallCollision ( grid_[i].nSubBoid_ );       //checking the walls
             obstacleCollision(grid_[i].nSubBoid_, grid_[i].subObstacles_);
             grid_[i].tresPass ();
+            //cout<<"Out collision\n";
+
         }
+        
         counter_ ++;
     }
     chrono::high_resolution_clock::time_point tf = chrono::high_resolution_clock::now ();

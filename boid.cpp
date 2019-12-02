@@ -97,7 +97,9 @@ boid::boid()
     xGoal_ = xV_;
     yGoal_ = yV_; 
 
+
     nGoalsReached_ = 0;
+
     //belongIndex_= 0;
     //influencexIndex_ = 0;
     //influenceyIndex_ = 0;
@@ -129,7 +131,9 @@ void boid::setExistance ( bool state )
     existance_ = state;
 }
 
+
 int boid::getnGoalsR(){ return nGoalsReached_; }
+
 
 //double boid::getbelongIndex () { return belongIndex_; }
 //double boid::getinfluencexIndex () { return influencexIndex_; }
@@ -182,10 +186,12 @@ void boid::updateyV ( double dt)
     else xV_ = xV_ + dt*xA_;;
 }
 
+
 void boid::updatenGoalsR()
 {
     nGoalsReached_ += 1;
 }
+
 
 void genBoid ()
 {   
@@ -236,8 +242,15 @@ void boid::collision ( vector<int> copynBoid )
     double d;
     vettore cong;
     int identity;
+
     for(int i=0; i<copynBoid.size (); i++)
     {
+
+    //cout<<"Inside collision\n";
+    for(int i=0; i<copynBoid.size (); i++)
+    {
+        //cout<<copynBoid.size ()<<" "<<i<<endl;
+
         identity = copynBoid[i];
         d=sqrt( (this->getx ()-nBoid_[identity].getx ())*(this->getx () -nBoid_[identity].getx ()) 
                +(this->gety ()-nBoid_[identity].gety ())*(this->gety () -nBoid_[identity].gety ()) );
@@ -314,6 +327,7 @@ void goalReacher ( boid &boid )
     Updates_ +=1;
     double distance = sqrt( ( boid.getx ()-boid.getxGoal ())*(boid.getx ()-boid.getxGoal()) +
                             ( boid.gety ()-boid.getyGoal ())*(boid.gety ()-boid.getyGoal()) ); 
+
     if ( distance < 0.1)
     {
         if(boid.getnGoalsR() == (boid.nGoals_ - 1))
@@ -323,6 +337,11 @@ void goalReacher ( boid &boid )
                 boid.updatenGoalsR();   
                 goalGiver(boid, 0., 0.);
             }
+
+    if ( distance < 0.05 )
+    {
+        boid.setExistance ( 0 );
+
     }
     
 }

@@ -43,7 +43,9 @@ class quadrant
 
 };
 
-int nQuadrant_ = 4;
+
+int nQuadrant_ = 100;
+
 double quadrantWidth_;
 
 vector<quadrant> grid_;

@@ -47,6 +47,7 @@ class boid
     int getIdentity ();
     bool getExistance ();
 
+
     int getnGoalsR();
 
     //double getbelongIndex ();
@@ -78,7 +79,6 @@ class boid
     void updateyV ( double dt );
 
     void setExistance ( bool state );
-
     void collision ( vector <int> copynBoid );
     
     void updatenGoalsR();
@@ -94,7 +94,9 @@ class boid
     double  modV_;
     double  xA_, yA_;
     double  xGoal_, yGoal_;
+
     int nGoalsReached_;
+
     int identity_;
     bool existance_;
 
