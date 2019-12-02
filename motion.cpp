@@ -59,7 +59,7 @@ void genCrowd ()
 
     chrono::high_resolution_clock::time_point ti = chrono::high_resolution_clock::now ();
     
-    while(counter_<1000)
+    while(counter_<100)
     {
         vector <int> copynBoid_;
         for(int i=0; i<grid_.size(); i++)               //looping the grid
