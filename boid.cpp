@@ -1,5 +1,12 @@
 #include "boid.h"
 
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-  To-be-analysed params -+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
+
+int Updates_ = 0;
+int nCollision_ = 0;
+
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
+
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+  Pre-existing Variables  -+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
 //                                  Necessary for Opengl function that do not have arguments
 
@@ -25,38 +32,39 @@ void WindowSets ( int argc, char **argv)
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+  BOID CLASS  -+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
 
-double boid::boidRadius_ = 0.02;
+double boid::boidRadius_ = 0.01;
 int boid::nBoidCounter_ = 0;
+int boid::nGoals_ = 2;
 
 boid::boid() 
-{   
+{      
     if ( nBoidCounter_ == 0 )
     {
         if((rand()%2)==1)                            //Randomizer x's and y's
-            { x_  =  ( 1-((float)(rand()%100))/500.); }
+            { x_  = ( (xMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
         else  
-            { x_  = -( 1-((float)(rand()%100))/500.); }
-        if((rand()%2)==1)
-            { y_  =  ( 1-((float)(rand()%100))/500.); }
-        else  
-            { y_  = -( 1-((float)(rand()%100))/500.); }
-        //y_  =  ( -0.5-((float)(rand()%100))/200.);
+            { x_  = ( (xMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
+        //if((rand()%2)==1)
+        //    { y_  = ( (yMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
+        //else  
+        //    { y_  = ( (yMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
+        y_  =  ( -0.5-((float)(rand()%100))/200.);
     }
-
+    
     for ( int i =0; i<(nBoidCounter_*2); i+=2)
     {
         if (i==0)
         {
             if((rand()%2)==1)                               //Randomizer x's and y's
-                { x_  =  ( 1-((float)(rand()%100))/100.); }
+                { x_  = ( (xMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
             else  
-                { x_  = -( 1-((float)(rand()%100))/100.); }
-            if((rand()%2)==1)
-                { y_  =  ( 1-((float)(rand()%100))/100.); }
-            else  
-                { y_  = -( 1-((float)(rand()%100))/100.); }
-            //y_  = ( -0.5-((float)(rand()%100))/200.);
-
+                { x_  = ( (xMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*xRange_); }
+            //if((rand()%2)==1)
+            //    { y_  = ( (yMax_-boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
+            //else  
+            //    { y_  = ( (yMin_+boid::boidRadius_)*(((float)(rand()%100))/200.)*yRange_); }
+            y_  = ( -0.5-((float)(rand()%100))/200.);
+    
         }
         if ( sqrt( (x_-boidPositions_[i])  *(x_-boidPositions_[i]) + 
                    (y_-boidPositions_[i+1])*(y_-boidPositions_[i+1]))  < (2*boidRadius_) )
@@ -65,33 +73,42 @@ boid::boid()
                    }  
         if (  abs(x_) > (1-boidRadius_) || abs(y_) > (1-boidRadius_) ) {i = -2;}  
     }
+    //x_ = 0;
+    //y_ = 0;
 
-    if((rand()%2)==1)                                       //Randomizer Vx's & Vy's
-        { xV_  =  ( (float)(rand()%100))/100.; }  
-    else  
-        { xV_  = -( (float)(rand()%100))/100.; }
-    
-    if((rand()%2)==1)
-        { yV_  =  ( (float)(rand()%100))/100.; }
-    else  
-        { yV_  = -( (float)(rand()%100))/100.; }
+    //if((rand()%2)==1)                                       //Randomizer Vx's & Vy's
+    //    { xV_  =  ( (float)(rand()%100))/100.; }  
+    //else  
+    //    { xV_  = -( (float)(rand()%100))/100.; }
+    //
+    //if((rand()%2)==1)
+    //    { yV_  =  ( (float)(rand()%100))/100.; }
+    //else  
+    //    { yV_  = -( (float)(rand()%100))/100.; }
 
-    //xV_ = 0.;
-    //yV_ = 0.;
-
-    xGoal_ = xV_;
-    yGoal_ = yV_;
-
-    modV_  = sqrt ( (pow (xV_, 2 ) + pow ( yV_, 2 )) ); 
+    xV_ = 0.;
+    yV_ = 0.;
 
     xA_ = 0;
     yA_ = 0;
 
+    modV_  = sqrt ( (pow (xV_, 2 ) + pow ( yV_, 2 )) );
+
+    xGoal_ = xV_;
+    yGoal_ = yV_; 
+
+    nGoalsReached_ = 0;
+    //belongIndex_= 0;
+    //influencexIndex_ = 0;
+    //influenceyIndex_ = 0;
+
     boidPositions_.push_back(x_);
     boidPositions_.push_back(y_);
+    identity_ = nBoidCounter_;
+    existance_ = 1;
     nBoidCounter_ += 1;
 }
-    
+
 double boid::getx () { return x_; }
 double boid::gety () { return y_; }
 
@@ -104,6 +121,19 @@ double boid::getyA () { return yA_; }
 
 double boid::getxGoal () { return xGoal_; }
 double boid::getyGoal () { return yGoal_; }
+
+int boid::getIdentity () { return identity_; }
+bool boid::getExistance () { return existance_; }
+void boid::setExistance ( bool state )
+{
+    existance_ = state;
+}
+
+int boid::getnGoalsR(){ return nGoalsReached_; }
+
+//double boid::getbelongIndex () { return belongIndex_; }
+//double boid::getinfluencexIndex () { return influencexIndex_; }
+//double boid::getinfluenceyIndex () { return influenceyIndex_; }
 
 void boid::setx ( double x ) { x_ =  x; }
 void boid::sety ( double y ) { y_ =  y; }
@@ -118,6 +148,9 @@ void boid::setyA ( double yA ) { yA_ = yA; }
 void boid::setxGoal ( double xGoal ) { xGoal_ = xGoal; } 
 void boid::setyGoal ( double yGoal ) { yGoal_ = yGoal; }
 
+//void boid::setbelongIndex ( int belongIndex ) { belongIndex_ = belongIndex; }
+//void boid::setinfluencexIndex ( int influencexIndex ) { influencexIndex_ = influencexIndex; }
+//void boid::setinfluenceyIndex ( int influenceyIndex ) { influenceyIndex_ = influenceyIndex; }
 
 void boid::updatex ( double dt )
 {   
@@ -149,6 +182,21 @@ void boid::updateyV ( double dt)
     else xV_ = xV_ + dt*xA_;;
 }
 
+void boid::updatenGoalsR()
+{
+    nGoalsReached_ += 1;
+}
+
+void genBoid ()
+{   
+    for ( int i=0; i<nBoids_; i++)
+    {
+        nBoid_.push_back ( boid() );
+        if ( (rand()%2) == 1 ) { goalGiver ( nBoid_[i], 0.8, 0.8); }
+        else { goalGiver ( nBoid_[i], -0.8, 0.8); }
+    }
+}
+
 void boidBody()
 {
     glBegin ( GL_POLYGON );
@@ -168,17 +216,6 @@ void renderBoid ()
     glEndList ();
 }
 
-void genBoid ( int nBoids )
-{   
-    nBoids_ = nBoids;
-    nBoid_.resize ( nBoids_ );
-    //for ( int i=0; i<nBoids_; i++)
-    //{
-    //    if ( (rand()%2) == 1 ) { goalGiver ( nBoid_[i], 0.8, 0.8); }
-    //    else { goalGiver ( nBoid_[i], -0.8, 0.8); }
-    //}
-}
-
 void drawBoid ( boid nBoid )
 {
     double colorinoB = ( sqrt (nBoid.getxV () * nBoid.getyV () + nBoid.getyV () * nBoid.getyV () ) / sqrt(2) );
@@ -187,28 +224,32 @@ void drawBoid ( boid nBoid )
     glTranslatef ( nBoid.getx(), nBoid.gety(), 0 );
     glCallList ( boidList_ );
     glPopMatrix ();
+    boidDrawn_ += 1;
 }
-
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
 
-void boid::collision ( vector<boid> copynBoid_ )
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+  BOID FUNCTION  +-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
+
+void boid::collision ( vector<int> copynBoid )
 {
     double d;
     vettore cong;
-    for(int i=0; i<copynBoid_.size (); i++)
+    int identity;
+    for(int i=0; i<copynBoid.size (); i++)
     {
-        d=sqrt( (this->getx ()-copynBoid_[i].getx ())*(this->getx () -copynBoid_[i].getx ()) 
-               +(this->gety ()-copynBoid_[i].gety ())*(this->gety () -copynBoid_[i].gety ()) );
+        identity = copynBoid[i];
+        d=sqrt( (this->getx ()-nBoid_[identity].getx ())*(this->getx () -nBoid_[identity].getx ()) 
+               +(this->gety ()-nBoid_[identity].gety ())*(this->gety () -nBoid_[identity].gety ()) );
         if(d<=(2*boid::boidRadius_) && d!=0)
         {    
             Updates_ +=1; 
             nCollision_ += 1;      
             
             vettore r_1 ( this->getx (), this->gety ());
-            vettore r_2 ( copynBoid_[i].getx (), copynBoid_[i].gety ());
+            vettore r_2 ( nBoid_[identity].getx (), nBoid_[identity].gety ());
             vettore v_1 ( this->getxV (), this->getyV ());
-            vettore v_2 ( copynBoid_[i].getxV (), copynBoid_[i].getyV ());
+            vettore v_2 ( nBoid_[identity].getxV (), nBoid_[identity].getyV ());
             cong=r_2-r_1;
             cong=cong.get_versor ();
             vettore norm=cong.get_normal ();
@@ -235,25 +276,11 @@ void boid::collision ( vector<boid> copynBoid_ )
     }
 }
 
-
 void goalGiver ( boid &Guest, double xGoal, double yGoal )
 {
     Updates_ +=1;
     Guest.setxGoal ( xGoal );
     Guest.setyGoal ( yGoal );
-}
-
-void goalReacher ( boid Guest )
-{
-    Updates_ +=1;
-    double distance = sqrt( ( Guest.getx () -Guest.getxGoal ())*(Guest.getx () -Guest.getxGoal()) +
-                            ( Guest.gety () -Guest.getyGoal ())*(Guest.gety () -Guest.getyGoal()) ); 
-    
-    if ( distance < 0.05 )
-    {
-            nBoid_.erase ( It_b );
-            nBoids_ -= 1;
-    }
 }
 
 void mindRefresher ( boid &Guest )
@@ -265,3 +292,39 @@ void mindRefresher ( boid &Guest )
     Guest.setxV ( normal_.componenti[0] );
     Guest.setyV ( normal_.componenti[1] );
 }
+
+/*void goalReacher ( vector<boid> &nSubBoid )
+{
+    Updates_ +=1;
+    int IndexMax = nSubBoid.size ();
+    for ( int Index=0; Index<IndexMax; Index++ )
+    {
+        double distance = sqrt( ( nSubBoid[Index].getx ()-nSubBoid[Index].getxGoal ())*(nSubBoid[Index].getx ()-nSubBoid[Index].getxGoal()) +
+                                ( nSubBoid[Index].gety ()-nSubBoid[Index].getyGoal ())*(nSubBoid[Index].gety ()-nSubBoid[Index].getyGoal()) ); 
+    
+        if ( distance < 0.05 )
+        {
+            nSubBoid.erase ( nSubBoid.begin ()+Index );
+        }
+    }
+}*/
+
+void goalReacher ( boid &boid )
+{
+    Updates_ +=1;
+    double distance = sqrt( ( boid.getx ()-boid.getxGoal ())*(boid.getx ()-boid.getxGoal()) +
+                            ( boid.gety ()-boid.getyGoal ())*(boid.gety ()-boid.getyGoal()) ); 
+    if ( distance < 0.1)
+    {
+        if(boid.getnGoalsR() == (boid.nGoals_ - 1))
+            {   boid.setExistance ( 0 );    }
+        else 
+            {   
+                boid.updatenGoalsR();   
+                goalGiver(boid, 0., 0.);
+            }
+    }
+    
+}
+
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
