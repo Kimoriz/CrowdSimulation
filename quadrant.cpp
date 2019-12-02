@@ -50,9 +50,9 @@ void quadrant::boidPlacer ()
         {
             //nBoid_[boidIndex].setbelongIndex ( quadIndex_ ); 
             nSubBoid_.reserve (1);
-            nSubBoid_.push_back ( nBoid_[boidIndex] );
-            nBoid_.erase ( nBoid_.begin ()+boidIndex );
-            boidIndex-=1;
+            nSubBoid_.push_back ( nBoid_[boidIndex].getIdentity () );
+            //nBoid_.erase ( nBoid_.begin ()+boidIndex );
+            //boidIndex-=1;
         }
     }
 }
@@ -122,7 +122,7 @@ void quadrant::ObstaclePlacer ()
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+  Walls Collisions  -+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
 
-void wallCollision ( vector<boid> &nBoid )
+/*void wallCollision ( vector<boid> &nBoid )
 {
     for ( int boidIndex=0; boidIndex<nBoid.size(); boidIndex++)
     {
@@ -142,9 +142,31 @@ void wallCollision ( vector<boid> &nBoid )
             } 
         }
     }
+}*/
+
+void wallCollision ( vector<int> &nBoid )
+{
+    for ( int boidIndex=0; boidIndex<nBoid.size(); boidIndex++)
+    {
+        double distancex_ = xMax_-abs(nBoid_[nBoid[boidIndex]].getx ());
+        double distancey_ = yMax_-abs(nBoid_[nBoid[boidIndex]].gety ()); 
+
+        if ( distancex_ < boid::boidRadius_ || distancey_ < boid::boidRadius_ )
+        {
+            Updates_ +=1;
+            if ( abs(nBoid_[nBoid[boidIndex]].getx ()) > 1-boid::boidRadius_ )
+            {
+                nBoid_[nBoid[boidIndex]].setxV ( -nBoid_[nBoid[boidIndex]].getxV () );
+            }   
+            if ( abs(nBoid_[nBoid[boidIndex]].gety ()) > 1-boid::boidRadius_ )
+            {
+                nBoid_[nBoid[boidIndex]].setyV ( -nBoid_[nBoid[boidIndex]].getyV () );
+            } 
+        }
+    }
 }
 
-int obstacleCollision(vector<boid> &boid, vector<obstacle> w)
+/*int obstacleCollision(vector<boid> &boid, vector<obstacle> w)
 {
     if(w.size() == 0)
     {  
@@ -180,7 +202,47 @@ int obstacleCollision(vector<boid> &boid, vector<obstacle> w)
         }
     }
     return 0;
+}*/
+
+int obstacleCollision ( vector<int> &nBoid, vector<obstacle> &wall)
+{
+    if(wall.size() == 0)
+    {  
+        return -1;
+    }
+    double wallRadius = wall[0].getRadius ();
+    double wWidth_ = wall[0].getWidth ();
+    double distancex_, distancey_;
+    double xClamp_, yClamp_;
+    double xP_, yP_;
+
+    for(int i = 0; i<nBoid.size(); i++)
+    {
+        for (int j = 0; j<wall.size(); j++)
+        {
+            distancex_ = wall[j].getxOrigin()-(nBoid_[nBoid[i]].getx ());
+            distancey_ = wall[j].getyOrigin()-(nBoid_[nBoid[i]].gety ()); 
+            //cout <<wradius<<endl;
+            if ( abs(distancex_) < (boid::boidRadius_ + wallRadius)  && abs(distancey_) < (boid::boidRadius_ + wallRadius) )
+            {
+                xClamp_ = clamp ( distancex_, -wWidth_ , wWidth_ ); 
+                yClamp_ = clamp ( distancey_, -wWidth_ , wWidth_ ); 
+                //cout<<"entrato"<<i<<endl;
+                xP_ = wall[j].getxOrigin() + xClamp_; 
+                yP_ = wall[j].getyOrigin() + yClamp_;
+                
+                if ( abs(nBoid_[nBoid[i]].getx()-(xP_))<abs(nBoid_[nBoid[i]].gety()-(yP_)) )
+                {
+                    nBoid_[nBoid[i]].setyV(-nBoid_[nBoid[i]].getyV());
+                }
+                else nBoid_[nBoid[i]].setxV(-nBoid_[nBoid[i]].getxV());
+            }
+        }
+    }
+    return 0;
 }
+
+
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
 
 //OLD VERSION OF VOID TRESPASS: if we decide to use this, we also need to update the collision system
@@ -188,10 +250,18 @@ void quadrant::tresPass ()          //Logic based on a bounded 2D space (alias w
 {
     for ( int boidIndex=0; boidIndex<nSubBoid_.size(); boidIndex++ )
     {
-        if ( nSubBoid_[boidIndex].getx () < xQuadMin_ ) boidMover ( boidIndex, quadIndex_, (quadIndex_-1) );
-        if ( nSubBoid_[boidIndex].getx () > xQuadMax_ ) boidMover ( boidIndex, quadIndex_, (quadIndex_+1) );
-        if ( nSubBoid_[boidIndex].gety () < yQuadMin_ ) boidMover ( boidIndex, quadIndex_, (quadIndex_-sqrt(nQuadrant_)) );
-        if ( nSubBoid_[boidIndex].gety () > yQuadMax_ ) boidMover ( boidIndex, quadIndex_, (quadIndex_+sqrt(nQuadrant_)) );      
+        if ( nBoid_[nSubBoid_[boidIndex]].getExistance () )
+        {
+            if ( nBoid_[nSubBoid_[boidIndex]].getx () < xQuadMin_ ) boidMover ( boidIndex, quadIndex_, (quadIndex_-1) );
+            if ( nBoid_[nSubBoid_[boidIndex]].getx () > xQuadMax_ ) boidMover ( boidIndex, quadIndex_, (quadIndex_+1) );
+            if ( nBoid_[nSubBoid_[boidIndex]].gety () < yQuadMin_ ) boidMover ( boidIndex, quadIndex_, (quadIndex_-sqrt(nQuadrant_)) );
+            if ( nBoid_[nSubBoid_[boidIndex]].gety () > yQuadMax_ ) boidMover ( boidIndex, quadIndex_, (quadIndex_+sqrt(nQuadrant_)) );  
+        }
+        else
+        {
+            nSubBoid_.erase ( nSubBoid_.begin() + boidIndex );
+            boidIndex -= 1;
+        } 
     }
 }
 

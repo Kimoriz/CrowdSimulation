@@ -44,6 +44,9 @@ class boid
     double getxGoal ();
     double getyGoal ();
 
+    int getIdentity ();
+    bool getExistance ();
+
     //double getbelongIndex ();
     //double getinfluencexIndex ();
     //double getinfluenceyIndex ();
@@ -68,10 +71,12 @@ class boid
     void updatex ( double dt );
     void updatey ( double dt );
 
-    void updatexV   ( double dt );
-    void updateyV   ( double dt );
+    void updatexV ( double dt );
+    void updateyV ( double dt );
 
-    void collision ( vector <boid> copynBoid );
+    void setExistance ( bool state );
+
+    void collision ( vector <int> copynBoid );
     
     static double boidRadius_;
 
@@ -83,6 +88,8 @@ class boid
     double  xA_, yA_;
     double  xGoal_, yGoal_;
 
+    int identity_;
+    bool existance_;
 
     int belongIndex_, influencexIndex_, influenceyIndex_;
 };
@@ -111,6 +118,7 @@ void goalGiver ( boid &Guest, double xGoal, double yGoal );
 
 void mindRefresher ( boid &Guest );
 
-void goalReacher ( vector<boid> &nSubBoid ); 
+//void goalReacher ( vector<boid> &nSubBoid );
+void goalReacher ( boid &boid );
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //

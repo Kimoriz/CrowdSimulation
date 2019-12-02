@@ -15,7 +15,7 @@ void idle ()
     {
         for ( int j=0; j<grid_[i].nSubBoid_.size(); j++ )
         {   
-            drawBoid ( grid_[i].nSubBoid_[j] );
+            drawBoid ( nBoid_[grid_[i].nSubBoid_[j]] );
         }
     }
 }
@@ -59,21 +59,21 @@ void genCrowd ()
 
     chrono::high_resolution_clock::time_point ti = chrono::high_resolution_clock::now ();
     
-    while(counter_<100)
+    while(counter_<1000)
     {
-        vector <boid> copynBoid_;
+        vector <int> copynBoid_;
         for(int i=0; i<grid_.size(); i++)               //looping the grid
         {
             copynBoid_=grid_[i].nSubBoid_;
             for(int j=0; j<copynBoid_.size(); j++)      //looping the boid 
             {
-                grid_[i].nSubBoid_[j].collision ( copynBoid_ );
-                grid_[i].nSubBoid_[j].updatex ( dt_ );
-                grid_[i].nSubBoid_[j].updatey ( dt_ );
-                grid_[i].nSubBoid_[j].updatexV ( dt_ );
-                grid_[i].nSubBoid_[j].updateyV ( dt_ );
-                grid_[i].nSubBoid_[j].setxA ( 0 );
-                grid_[i].nSubBoid_[j].setyA ( 0 );
+                nBoid_[grid_[i].nSubBoid_[j]].collision ( copynBoid_ );
+                nBoid_[grid_[i].nSubBoid_[j]].updatex ( dt_ );
+                nBoid_[grid_[i].nSubBoid_[j]].updatey ( dt_ );
+                nBoid_[grid_[i].nSubBoid_[j]].updatexV ( dt_ );
+                nBoid_[grid_[i].nSubBoid_[j]].updateyV ( dt_ );
+                nBoid_[grid_[i].nSubBoid_[j]].setxA ( 0 );
+                nBoid_[grid_[i].nSubBoid_[j]].setyA ( 0 );
             }
             wallCollision ( grid_[i].nSubBoid_ );       //checking the walls
             obstacleCollision(grid_[i].nSubBoid_, grid_[i].subObstacles_);
@@ -96,25 +96,27 @@ void genCrowd ()
             //It_ = nBoid_.begin() + j;
             if((rand()%2)==1)                            //Randomizer x's and y's
             {
-                mindRefresher ( grid_[i].nSubBoid_[j] ); 
+                mindRefresher ( nBoid_[grid_[i].nSubBoid_[j]] ); 
             }
             else  
             { 
-                mindRefresher ( grid_[i].nSubBoid_[j] ); 
+                mindRefresher ( nBoid_[grid_[i].nSubBoid_[j]] ); 
             }           
-            drawBoid ( grid_[i].nSubBoid_[j] );
+            drawBoid ( nBoid_[grid_[i].nSubBoid_[j]] );
+            goalReacher ( nBoid_[grid_[i].nSubBoid_[j]] );
         }
-        goalReacher ( grid_[i].nSubBoid_ );
+        //goalReacher ( nBoid_[grid_[i].nSubBoid_] );
     }
     //cout<<boidDrawn_<<endl;
-    //cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "<<time_span.count ()<<'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
+    //cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "
+    cout<<time_span.count ()<<endl;//'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
     nCollision_ = 0;
     glutSwapBuffers ();
 }
 
 void timeUpdate ( void )
 {
-    dt_ = 0.00001;
+    dt_ = 0.0001;
     glutPostRedisplay();
 }
 

@@ -102,6 +102,8 @@ boid::boid()
 
     boidPositions_.push_back(x_);
     boidPositions_.push_back(y_);
+    identity_ = nBoidCounter_;
+    existance_ = 1;
     nBoidCounter_ += 1;
 }
 
@@ -117,6 +119,13 @@ double boid::getyA () { return yA_; }
 
 double boid::getxGoal () { return xGoal_; }
 double boid::getyGoal () { return yGoal_; }
+
+int boid::getIdentity () { return identity_; }
+bool boid::getExistance () { return existance_; }
+void boid::setExistance ( bool state )
+{
+    existance_ = state;
+}
 
 //double boid::getbelongIndex () { return belongIndex_; }
 //double boid::getinfluencexIndex () { return influencexIndex_; }
@@ -213,23 +222,25 @@ void drawBoid ( boid nBoid )
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+  BOID FUNCTION  +-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
 
-void boid::collision ( vector<boid> copynBoid )
+void boid::collision ( vector<int> copynBoid )
 {
     double d;
     vettore cong;
+    int identity;
     for(int i=0; i<copynBoid.size (); i++)
     {
-        d=sqrt( (this->getx ()-copynBoid[i].getx ())*(this->getx () -copynBoid[i].getx ()) 
-               +(this->gety ()-copynBoid[i].gety ())*(this->gety () -copynBoid[i].gety ()) );
+        identity = copynBoid[i];
+        d=sqrt( (this->getx ()-nBoid_[identity].getx ())*(this->getx () -nBoid_[identity].getx ()) 
+               +(this->gety ()-nBoid_[identity].gety ())*(this->gety () -nBoid_[identity].gety ()) );
         if(d<=(2*boid::boidRadius_) && d!=0)
         {    
             Updates_ +=1; 
             nCollision_ += 1;      
             
             vettore r_1 ( this->getx (), this->gety ());
-            vettore r_2 ( copynBoid[i].getx (), copynBoid[i].gety ());
+            vettore r_2 ( nBoid_[identity].getx (), nBoid_[identity].gety ());
             vettore v_1 ( this->getxV (), this->getyV ());
-            vettore v_2 ( copynBoid[i].getxV (), copynBoid[i].getyV ());
+            vettore v_2 ( nBoid_[identity].getxV (), nBoid_[identity].getyV ());
             cong=r_2-r_1;
             cong=cong.get_versor ();
             vettore norm=cong.get_normal ();
@@ -273,7 +284,7 @@ void mindRefresher ( boid &Guest )
     Guest.setyV ( normal_.componenti[1] );
 }
 
-void goalReacher ( vector<boid> &nSubBoid )
+/*void goalReacher ( vector<boid> &nSubBoid )
 {
     Updates_ +=1;
     int IndexMax = nSubBoid.size ();
@@ -287,6 +298,18 @@ void goalReacher ( vector<boid> &nSubBoid )
             nSubBoid.erase ( nSubBoid.begin ()+Index );
         }
     }
+}*/
+
+void goalReacher ( boid &boid )
+{
+    Updates_ +=1;
+    double distance = sqrt( ( boid.getx ()-boid.getxGoal ())*(boid.getx ()-boid.getxGoal()) +
+                            ( boid.gety ()-boid.getyGoal ())*(boid.gety ()-boid.getyGoal()) ); 
+    if ( distance < 0.05 )
+    {
+        boid.setExistance ( 0 );
+    }
+    
 }
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //

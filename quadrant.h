@@ -15,11 +15,15 @@ class quadrant
 
     void obstaclePlacer ();
 
-    vector <boid> nSubBoid_;
+    //vector <boid> nSubBoid_;
+    vector <int> nSubBoid_;
     vector <obstacle> subObstacles_;
     
-    void wallCollision ( vector<boid> &boid);
-    int obstacleCollision(vector<boid> &boid, vector<obstacle> w);      //boid vs walls
+    //void wallCollision ( vector<boid> &boid);
+    void wallCollision ( vector<int> &boid);
+    
+    //int obstacleCollision ( vector<boid> &boid, vector<obstacle> w );      //boid vs walls
+    int obstacleCollision ( vector<int> &boid, vector<obstacle> w );      //boid vs walls
 
     void tresPass ();
     void boidMover ( int boidIndex, int quadIndex, int newQuadIndex );
@@ -39,7 +43,7 @@ class quadrant
 
 };
 
-int nQuadrant_ = 100;
+int nQuadrant_ = 4;
 double quadrantWidth_;
 
 vector<quadrant> grid_;

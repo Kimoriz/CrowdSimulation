@@ -20,23 +20,23 @@ double obstacle::getWidth   () { return width_; }
 
 void genObstacles ()
 { 
-    int nWallGen_ = 1000;
-    double wallRadius_ = (1.6)/(nWallGen_);
+    int nWallGen_ = 300;
+    double wallRadius_ = (xRange_)/(nWallGen_);
     //double yWallRadius_ = yRange_/nWallGen_;
     //Walls_.resize (100); 
     
-    for(int i = 0; i<nWallGen_/2; i++)
+    for(int i = 0; i<nWallGen_; i++)
     {
         //Walls_[i] = obstacle(  xMin_+i*wallRadius_, 0.4, wallRadius_);
         //Walls_.push_back( obstacle(  xMin_+i*wallRadius_, 0.4, wallRadius_) );
-        Walls_.push_back( obstacle(  -0.2, yMin_+i*wallRadius_, wallRadius_) );
+        Walls_.push_back( obstacle(  -0.1, yMin_+i*wallRadius_, wallRadius_) );
     }
-    for(int i = nWallGen_/2; i<nWallGen_; i++)
-    {
-        //Walls_[i] = obstacle(  xMin_+i*wallRadius_, 0.4, wallRadius_);
-        //Walls_.push_back( obstacle(  xMin_+i*wallRadius_, 0.4, wallRadius_) );
-        Walls_.push_back( obstacle(  -0.2, 0.2+i*wallRadius_, wallRadius_) );
-    }
+    //for(int i = nWallGen_/2; i<nWallGen_; i++)
+    //{
+    //    //Walls_[i] = obstacle(  xMin_+i*wallRadius_, 0.4, wallRadius_);
+    //    //Walls_.push_back( obstacle(  xMin_+i*wallRadius_, 0.4, wallRadius_) );
+    //    Walls_.push_back( obstacle(  -0.2, 0.2+i*wallRadius_, wallRadius_) );
+    //}
 /*    
     for(int i = 11; i<90; i++)
     {
