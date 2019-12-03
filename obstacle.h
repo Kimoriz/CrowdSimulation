@@ -7,32 +7,30 @@ class obstacle
     public: 
 
     obstacle ();
-    obstacle ( double xOrigin, double yOrigin, double Radius );
+    obstacle ( double , double , double , double );
 
     double getxOrigin ();
     double getyOrigin ();
     double getRadius ();
+    double getWidth ();
+    double getHeight ();
 
     private:
 
     double xOrigin_, yOrigin_, Radius_;
+    double height_;
+    double width_;
 };
+
+vector <obstacle> Walls_;
+vector <obstacle>::iterator It_Obs;
+
+
+double clamp(double, double, double);
 
 
 void genObstacles ();
 
 void drawObstacles ();
-
-// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
-
-// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-  Walls  -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+ //
-
-vector <obstacle> Walls_;
-vector <obstacle>::iterator It_w;
-
-double nWallGen_ = 200;
-double wallRadius_;
-
-void wallCollision ( vector<boid> &boid);
 
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-++-+-+-+-+-+-++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ //
