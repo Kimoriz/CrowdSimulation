@@ -10,8 +10,6 @@ void resize ();
 
 void axes ();
 
-void fillGrid();
-
 void genCrowd ( int nBoids );
 
 void timeUpdate ( void );
