@@ -10,10 +10,13 @@ void idle ()
 
     renderBoid();                                       //Generate boids structure, later should be used also for obstacles ecc...
 
-    glClearColor (0.0, 0.2, 0.5, 0.5);
-    for ( int i = 0; i < nBoids_; i++)
-    {   
-        drawBoid ( nBoid_[i] );
+    glClearColor (0.0, 0., 0., 0.);
+    for ( int i=0; i<grid_.size(); i++ )
+    {
+        for ( int j=0; j<grid_[i].nSubBoid_.size(); j++ )
+        {   
+            drawBoid ( nBoid_[grid_[i].nSubBoid_[j]] );
+        }
     }
 }
 
@@ -27,7 +30,7 @@ void refSys ( int Width_, int Height_ )
 
 void resize ()
 {   
-    glColor3d ( 1.0, 0.2, 0.2 );
+    glColor3d ( 0.0, 0.2, 0.2 );
     glBegin ( GL_QUADS );
      glVertex2d ( xMin_, yMin_ );
      glVertex2d ( xMax_, yMin_ );
@@ -47,91 +50,167 @@ void axes ()
     glEnd (); 
 }
 
-void fillGrid() //filling the grid with people and walls, then deleting the empty vectors of people and walls
-{
-    double x=0; 
-    double y=0; 
-    for(int i=0; i<sqrt(nQuadrant_); i++)
-    {
-        for(int j=0; j<sqrt(nQuadrant_); j++)
-        {
-            x=-1+(i*(xRange_/sqrt(nQuadrant_))+((xRange_/sqrt(nQuadrant_))/2));
-            y=1-(j*(yRange_/sqrt(nQuadrant_))+((yRange_/sqrt(nQuadrant_))/2));
-            grid_.push_back(quadrant(x,y));
-        }
-    }
-    for(int i=0; i<grid_.size(); i++)
-    {
-        grid_[i].boidPlacer();
-        //grid_[i].wallPlacer();
-    }
-    nBoid_.shrink_to_fit();
-    //Walls_.shrink_to_fit();
-}
-
 void genCrowd ()
 {   
-    glClearColor ( 0.0, 0.4, 0.4, 0. );
+    glClearColor ( 0., 0., 0., 0. );
     glClear ( GL_COLOR_BUFFER_BIT );
 
     int counter_ = 0;
 
     chrono::high_resolution_clock::time_point ti = chrono::high_resolution_clock::now ();
-    /*while ( counter_<100 )
-    {
-        vector <boid> copynBoid_ = nBoid_;
-        for ( int i=0; i<nBoids_; i++ )
+    
+    
+
+        for(int i=0; i<grid_.size(); i++)               //looping the grid
         {
-            nBoid_[i].collision ( copynBoid_ );
-            nBoid_[i].updatex ( dt_ );
-            nBoid_[i].updatey ( dt_ );
-            nBoid_[i].updatexV ( dt_ );
-            nBoid_[i].updateyV ( dt_ );
-            nBoid_[i].setxA ( 0 );
-            nBoid_[i].setyA ( 0 );
-        }
-        wallCollision();
-        counter_ ++;
-    }*/
-    while(counter_<100)
-    {
-        vector <boid> copynBoid_;
-        for(int i=0; i<grid_.size(); i++)          //looping the grid
-        {
-            copynBoid_=grid_[i].nSubBoid_;
-            for(int j=0; j<copynBoid_.size(); j++) //looping the boid 
+            
+            cout<<"grid size="<<grid_.size()<<endl;
+            counter_=0;
+            double t=0;
+            while(counter_<100)
             {
-                grid_[i].nSubBoid_[j].collision ( copynBoid_ );
-                grid_[i].nSubBoid_[j].updatex ( dt_ );
-                grid_[i].nSubBoid_[j].updatey ( dt_ );
-                grid_[i].nSubBoid_[j].updatexV ( dt_ );
-                grid_[i].nSubBoid_[j].updateyV ( dt_ );
-                grid_[i].nSubBoid_[j].setxA ( 0 );
-                grid_[i].nSubBoid_[j].setyA ( 0 );
+                vector <int> copynBoid_;
+                int N=sqrt(nQuadrant_);
+                copynBoid_=grid_[i].nSubBoid_;
+                cout<<"Prima urtoni\n";
+                urtoni(grid_[i].nSubBoid_, copynBoid_, grid_[i].subObstacles_, i, t);
+            /*if(i==0)//bot left corner
+            {
+                //cout<<"Bot Left\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N+1].nSubBoid_.begin(),grid_[i+N+1].nSubBoid_.end());
             }
-            wallCollision ( grid_[i].nSubBoid_ );//checking the walls
+            else if(i==((N*N)-1))//top right corner
+            {
+                //cout<<"Top Right\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N-1].nSubBoid_.begin(),grid_[i-N-1].nSubBoid_.end());
+            }
+            else if(i==(N-1))//bottom right corner
+            {
+                //cout<<"Bot Right\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N-1].nSubBoid_.begin(),grid_[i+N-1].nSubBoid_.end());   
+            }
+            else if(i==((N*N)-1-N))//top left corner
+            {
+                //cout<<"Top Left\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N+1].nSubBoid_.begin(),grid_[i-N+1].nSubBoid_.end()); 
+            }
+            else if(i>((N*N)-N))//first row
+            {
+                //cout<<"First Row\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N-1].nSubBoid_.begin(),grid_[i-N-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N+1].nSubBoid_.begin(),grid_[i-N+1].nSubBoid_.end());
+            }
+            else if(i<N)//last row
+            {
+                //cout<<"Last Row\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N-1].nSubBoid_.begin(),grid_[i+N-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N+1].nSubBoid_.begin(),grid_[i+N+1].nSubBoid_.end());
+            }
+            else if(i%N==0)//first column
+            {
+                //cout<<"First Col\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1+N].nSubBoid_.begin(),grid_[i+1+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1-N].nSubBoid_.begin(),grid_[i+1-N].nSubBoid_.end());
+            }
+            else if(i%N==1)//last column
+            {
+                //cout<<"Last Col\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1+N].nSubBoid_.begin(),grid_[i-1+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1-N].nSubBoid_.begin(),grid_[i-1-N].nSubBoid_.end());
+            }
+            else
+            {
+                //cout<<"Else\n";
+                //copynBoid_.insert(copynBoid_.end(),grid_[i].nSubBoid_.begin(),grid_[i].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-1].nSubBoid_.begin(),grid_[i-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+1].nSubBoid_.begin(),grid_[i+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N].nSubBoid_.begin(),grid_[i-N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N-1].nSubBoid_.begin(),grid_[i-N-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i-N+1].nSubBoid_.begin(),grid_[i-N+1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N].nSubBoid_.begin(),grid_[i+N].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N-1].nSubBoid_.begin(),grid_[i+N-1].nSubBoid_.end());
+                copynBoid_.insert(copynBoid_.end(),grid_[i+N+1].nSubBoid_.begin(),grid_[i+N+1].nSubBoid_.end());
+            }*/
+            /*for(int j=0; j<grid_[i].nSubBoid_.size(); j++)      //looping the boid 
+            {
+                nBoid_[grid_[i].nSubBoid_[j]].collision ( copynBoid_ );
+                nBoid_[grid_[i].nSubBoid_[j]].updatex ( dt_ );
+                nBoid_[grid_[i].nSubBoid_[j]].updatey ( dt_ );
+                nBoid_[grid_[i].nSubBoid_[j]].updatexV ( dt_ );
+                nBoid_[grid_[i].nSubBoid_[j]].updateyV ( dt_ );
+                nBoid_[grid_[i].nSubBoid_[j]].setxA ( 0 );
+                nBoid_[grid_[i].nSubBoid_[j]].setyA ( 0 );
+            }*/
+            //wallCollision ( grid_[i].nSubBoid_ );       //checking the walls
+            //obstacleCollision(grid_[i].nSubBoid_, grid_[i].subObstacles_);
+            //grid_[i].tresPass ();
+            //cout<<"Out collision\n";
+            counter_ ++;
+            }
         }
-        counter_ ++;
-    }
+        cout<<"Dopo urtoni\n";
+        for(int i=0; i<grid_.size(); i++)
+        {
+            updater(grid_[i].nSubBoid_,dt_*100);
+        }
     chrono::high_resolution_clock::time_point tf = chrono::high_resolution_clock::now ();
     chrono::duration<double> time_span = chrono::duration_cast<chrono::duration<double>> ( tf - ti );
+    
     for(int i=0; i<grid_.size(); i++)
     {
-        for(int j=0; j<grid_[i].nSubBoid_.size(); j++)
-        {
-           // It_ = nBoid_.begin() + j;
-
-            //if((rand()%2)==1)                            //Randomizer x's and y's
-            //    { mindRefresher (nBoid_[j]); }
-            //else  
-            //{ 
-            //    mindRefresher (nBoid_[j]); 
-            //}
-            //goalReacher ( nBoid_[j]);
-            drawBoid ( grid_[i].nSubBoid_[j] );
+        for ( int j=0; j<grid_[i].subObstacles_.size(); j++ )
+        {   
+            drawObstacles ( Walls_[grid_[i].subObstacles_[j]]);
         }
+    
+        for(int j=0; j<grid_[i].nSubBoid_.size(); j++)   //grid_[i].nSubBoid_[j]
+        {
+            //It_ = nBoid_.begin() + j;
+            /*if((rand()%2)==1)                            //Randomizer x's and y's
+            {
+                mindRefresher ( nBoid_[grid_[i].nSubBoid_[j]] ); 
+            }
+            else  
+            { 
+                mindRefresher ( nBoid_[grid_[i].nSubBoid_[j]] ); 
+            }*/
+            cout<<grid_[i].nSubBoid_[j]<<" Drawing\n";
+            drawBoid ( nBoid_[grid_[i].nSubBoid_[j]] );
+            //goalReacher ( nBoid_[grid_[i].nSubBoid_[j]] );
+        }
+        //goalReacher ( nBoid_[grid_[i].nSubBoid_] );
     }
-    cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "<<time_span.count ()<<'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
+    //cout<<boidDrawn_<<endl;
+    //cout<<"Collision #: "<<nCollision_<<'\t'<<"Time: "
+    //cout<<time_span.count ()<<endl;//'\t'<<"Collision/time : "<<nCollision_/time_span.count ()<<endl;
     nCollision_ = 0;
     glutSwapBuffers ();
 }
