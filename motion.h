@@ -1,4 +1,4 @@
-#include "quadrant.cpp"
+#include "urti.cpp"
 
 double dt_ = 0;
 
@@ -9,8 +9,6 @@ void refSys ( int width, int height );
 void resize ();
 
 void axes ();
-
-void fillGrid();
 
 void genCrowd ( int nBoids );
 
